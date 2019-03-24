@@ -1,35 +1,78 @@
 <template>
-    <v-container >
-        <v-layout column>
-            <h1 class="title my-3">My Listed Products</h1>
-            <div v-for="(item, idx) in userRecipes" class="subheading mb-2" :key="idx">
-                {{item}}
-            </div>
-            <v-flex mt-4>
-                <v-btn color="primary" to="/newsale">Make a New Sale</v-btn>
+
+    <v-container fluid fill-height class="about">
+        <v-layout align-center justify-center>
+            <v-flex xs12 sm8 md4>
+                <v-card class="elevation-12">
+                    <v-toolbar dark color="primary">
+                        <v-toolbar-title>Your Profile</v-toolbar-title>
+                    </v-toolbar>
+                    <v-list-tile>
+                        <v-list-tile-content>Email:</v-list-tile-content>
+                        <v-list-tile-content class="align-end">{{this.userEmail}}</v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile>
+                        <v-list-tile-content>Wallet Address:</v-list-tile-content>
+                        <v-list-tile-content class="align-end">{{this.walletId}}</v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile>
+                        <v-list-tile-content>Your User UID:</v-list-tile-content>
+                        <v-list-tile-content class="align-end">{{this.userId}}</v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile>
+                        <v-list-tile-content>Sale Authorization:</v-list-tile-content>
+                        <v-list-tile-content class="align-end">{{this.authorisedSellerMessage}}</v-list-tile-content>
+                    </v-list-tile>
+                </v-card>
+                <v-toolbar v-if="this.authorisedSeller==false">
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" to="/authorise-sale">Request to Sell</v-btn>
+                </v-toolbar>
             </v-flex>
         </v-layout>
     </v-container>
 </template>
 
 <script>
+import dataStore from '../store/dataStore';
+
 export default {
     name: 'About',
-    computed: {
-        userRecipes() {
-            return this.$store.state.userRecipes;
-        }
-    },
-    mounted() {
-        this.getRecipes();
+    data() {
+        return{
+            userEmail: '',
+            userId: '',
+            walletId: '',
+            authorisedSeller: false,
+            authorisedSellerMessage: ''
+        }     
     },
     methods: {
-        getRecipes() {
-            this.$store.dispatch('getUserRecipes');
-        }
+        prepData() {
+            this.userEmail = dataStore.state.user.userEmail;
+            this.userId = dataStore.state.user.userId;
+            this.walletId = dataStore.state.user.walletId;
+            if (dataStore.state.user.authorisedSeller==true) {
+                this.authorisedSeller = true;
+                this.authorisedSellerMessage = 'You are authorised to sell!';
+            }
+            if (dataStore.state.user.authorisedSeller==false) {
+                this.authorisedSeller = false;
+                this.authorisedSellerMessage = 'Please request sale access.';
+            }
+        },
+    },
+    beforeMount() {
+      this.prepData();
     }
-};
+}
 </script>
 
 <style scoped>
+.about {
+    background: url('https://cdn-images-1.medium.com/max/1600/1*DTkbYDqroiSzJ3k5c_x5Zg.jpeg');
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
 </style>

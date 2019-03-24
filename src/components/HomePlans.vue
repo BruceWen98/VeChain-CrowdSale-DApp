@@ -28,11 +28,6 @@
                             <div>Buy/Sell products using cryptocurrency, without the hassle of credit cards.</div>
                         </div>
                     </v-card-text>
-
-                    <v-card-actions v-if="['menu'].includes($route.name)">
-                        <v-btn outline block color="green" @click="showRecipes('keto')" data-cy="plansKetoBtn">
-                            Select This Plan</v-btn>
-                    </v-card-actions>
                 </v-card>
             </v-flex>
 
@@ -43,7 +38,7 @@
                             <v-container fill-height fluid>
                                 <v-layout fill-height>
                                     <v-flex xs12 align-end flexbox>
-                                        <span class="headline white--text">GROUP BUY</span>
+                                        <span class="headline white--text">AUCTION / BUY</span>
                                     </v-flex>
                                 </v-layout>
                             </v-container>
@@ -56,11 +51,6 @@
                             <div>You get the cheapest price possible because sellers have the assurance that they are selling a particular amount.</div>
                         </div>
                     </v-card-text>
-
-                    <v-card-actions v-if="['menu'].includes($route.name)">
-                        <v-btn outline block color="green" @click="showRecipes('paleo')" data-cy="plansPaleoBtn">
-                            Select This Plan</v-btn>
-                    </v-card-actions>
                 </v-card>
             </v-flex>
 
@@ -84,11 +74,6 @@
                             <div>Software keys, indie games, movies, digital magazines, digital newspapers, e-books, freelance services... Revel in the modern CrowdSale concept online.</div>
                         </div>
                     </v-card-text>
-
-                    <v-card-actions v-if="['menu'].includes($route.name)">
-                        <v-btn outline block color="green" @click="showRecipes('vegan')" data-cy="plansVeganBtn">
-                            Select This Plan</v-btn>
-                    </v-card-actions>
                 </v-card>
             </v-flex>
 
@@ -98,12 +83,7 @@
 
 <script>
 export default {
-    name: 'HomePlans',
-    methods: {
-        showRecipes(plan) {
-            this.$store.dispatch('getRecipes', plan);
-        }
-    }
+    name: 'HomePlans'
 };
 </script>
 

@@ -1,8 +1,8 @@
 <template>
     <v-container fluid fill-height class="Newsale">
         <v-layout align-center justify-center>
-            <v-flex xs12 sm8 md4>
-                <v-card>
+            <v-flex xs12 sm8 md8>
+                <v-card class="rounded-card">
                     <v-toolbar dark color="primary">
                         <v-toolbar-title>New Sale</v-toolbar-title>
                     </v-toolbar>
@@ -11,12 +11,12 @@
                         <pre> </pre>
                         <RockerSwitch 
                             size= medium
-                            :value="currentValue"
-                            @change="isOn => (currentValue = isOn)"
+                            :value="auction"
+                            @change="isOn => (auction = isOn)"
                             toggle
                         />
                     </v-toolbar>
-                    <v-card-text v-if="currentValue==true">
+                    <v-card-text v-if="auction==true">
                         <v-img src="https://previews.123rf.com/images/nomad_s0ul/nomad_s0ul1603/nomad_s0ul160300027/53405770-seamless-shopping-cart-pattern-background-texture.jpg" height="50px">
                         </v-img>
                         <v-form ref="form" v-model="valid" lazy-validation>
@@ -26,10 +26,10 @@
                             <v-text-field prepend-icon="shopping_cart" name="number_of_products" label="Number of Products"
                                 required v-model='number_of_products' :rules="shoppingCartRules">
                             </v-text-field>
-                            <v-text-field prepend-icon="attach_money" name="minimum_bidding_price" label="Minimum Bidding Price"
+                            <v-text-field prepend-icon="attach_money" name="minimum_bidding_price" label="Minimum Bidding Price (in VET)"
                                 required v-model='minimum_bidding_price' :rules="minPriceRules">
                             </v-text-field>
-                            <v-text-field prepend-icon="attach_money" name="suggested_bidding_price" label="Suggested Bidding Price"
+                            <v-text-field prepend-icon="attach_money" name="suggested_bidding_price" label="Suggested Bidding Price (in VET)"
                                 required v-model='suggested_bidding_price' :rules="suggestedPriceRules">
                             </v-text-field>
                             <v-text-field prepend-icon="description" name="product_description" label="Product Description"
@@ -40,16 +40,16 @@
                             </v-text-field>                            
                         </v-form>
                         <v-select
+                            v-model="category"
                             prepend-icon="category"
                             :items="items"
                             box
                             chips
                             label="Product Category"
-                            multiple
                             single-line=""
                         ></v-select>
                     </v-card-text>
-                    <v-card-text v-if="currentValue==false">
+                    <v-card-text v-if="auction==false">
                         <v-img src="https://thumbs.dreamstime.com/z/background-woman-shopping-items-seamless-pattern-vector-72626156.jpg" height="50px">
                         </v-img>
                         <v-form ref="form" v-model="valid" lazy-validation>
@@ -59,7 +59,7 @@
                             <v-text-field prepend-icon="shopping_cart" name="number_of_products" label="Number of Products"
                                 required v-model='number_of_products' :rules="shoppingCartRules">
                             </v-text-field>
-                            <v-text-field prepend-icon="attach_money" name="price" label="Selling Price"
+                            <v-text-field prepend-icon="attach_money" name="price" label="Selling Price (in VET)"
                                 required v-model='price' :rules="priceRules">
                             </v-text-field>
                             <v-text-field prepend-icon="description" name="product_description" label="Product Description"
@@ -70,13 +70,14 @@
                             </v-text-field>   
                         </v-form>
                         <v-select
+                            v-model="category"
                             prepend-icon="category"
                             :items="items"
                             box
                             chips
                             label="Product Category"
-                            multiple
                             single-line=""
+                            required
                         ></v-select>
                     </v-card-text>
 
@@ -92,7 +93,7 @@
                     </v-toolbar>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" :disabled="!valid" @click="submit" data-cy="joinSubmitBtn">Create New Sale</v-btn>
+                        <v-btn color="primary" :disabled="!valid" @click="submit">Create New Sale</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-flex>
@@ -103,6 +104,13 @@
 <script>
 import RockerSwitch from "vue-rocker-switch";
 import "vue-rocker-switch/dist/vue-rocker-switch.css";
+
+import Vue from 'vue';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+Vue.use(Loading);
+
+import dataStore from '../store/dataStore';
 
 //Change Rocker switch label name.
 function changelabelName(onName, offName) {
@@ -121,24 +129,26 @@ setBorderColor('#DCDCDC');
 export default {
     name: 'Newsale',
     components: {
-        RockerSwitch
+        RockerSwitch,
+        Loading
     },
     data() {
         return {
-            currentValue: true,
-            ifBuyerPay: true,
-
             valid: false,
+
+            auction: true,
             product_name: '',
             number_of_products: '',
-            minimum_bidding_price: '',
-            suggested_bidding_price: '',
-            product_description: '',
-            product_weblink: '',
-            price: '',
+            minimum_bidding_price: null,
+            suggested_bidding_price: null,
+            product_description: null,
+            product_weblink: null,
+            price: null,
+            ifBuyerPay: true,
+            category:'',
 
             items: ['software', 'media', 'games', 'e-books', 'services', 'others'],
-
+            
             productNameRules: [
                 v => !!v || 'Product Name is required'
             ],
@@ -163,34 +173,59 @@ export default {
             priceRules: [
                 v => !!v || 'Price required',
                 v => /^[$]?[0-9]*(\.)?[0-9]?[0-9]?$/.test(v) || 'Must be Valid Price'
-            ]
+            ],
+            
+            authorisedSeller: false
         }
     },
     computed: {
-        userRecipes() {
-            return this.$store.state.userRecipes;
+        isAuthenticated() {
+            return this.$store.getters.isAuthenticated;
+        },
+        getUser() {
+            return this.$store.getters.getUser;
         }
     },
-    mounted() {
-        this.getRecipes();
-    },
     methods: {
-        getRecipes() {
-            this.$store.dispatch('getUserRecipes');
-        },
         methodToRunOnSelect(payload) {
             this.object = payload;
         },
         on(value) {
-            this.currentValue = value;
+            this.auction = value;
         },
         submit() {
-            let obj={
-                p: this.product_name
+            if (!this.isAuthenticated) {
+                console.log('Login to create New Sale')
+                this.$router.push('/sign-in');
+            } else {
+                let product={
+                    productName: this.product_name,
+                    auction: this.auction,
+                    productAmount: this.number_of_products,
+                    minPrice: this.minimum_bidding_price,
+                    suggestedPrice: this.suggested_bidding_price,
+                    price: this.price,
+                    description: this.product_description,
+                    weblink: this.product_weblink,
+                    transaction: this.ifBuyerPay,
+                    productCategory: this.category,
+                    sellerId: this.getUser.user.uid
+                }
+                console.log(product)
+                //superagent.post()
+
+                let loader = this.$loading.show({
+                    loader: 'bars',
+                    opacity: 0.6,
+                    color:'blue'
+                });
+                setTimeout(() => loader.hide(), 1000)
             }
-            console.log(obj)
-            //superagent.post()
+        },
+        prepData() {
+            this.authorisedSeller = dataStore.state.user.authorisedSeller
         }
+
     }
 };
 </script>
@@ -201,5 +236,8 @@ export default {
     background-size: cover;
     width: 100%;
     height: 100%;
+}
+.rounded-card {
+  border-radius: 15px
 }
 </style>

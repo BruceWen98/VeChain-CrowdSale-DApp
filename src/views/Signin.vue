@@ -1,5 +1,5 @@
 <template>
-    <v-container fill-height>
+    <v-container fluid fill-height class="sign-in">
         <v-layout align-center justify-center>
             <v-flex xs12 sm8 md4>
                 <v-card class="elevation-12">
@@ -28,6 +28,11 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+Vue.use(Loading);
+
 export default {
     name: 'Signin',
     data() {
@@ -41,10 +46,8 @@ export default {
             ],
             passwordRules: [
                 v => !!v || 'Password is required',
-                v =>
-                    v.length >= 6 ||
-                    'Password must be greater than 6 characters'
-            ]
+                v => v.length >= 6 || 'Password must be greater than 6 characters'
+            ],
         };
     },
     methods: {
@@ -54,6 +57,12 @@ export default {
                     email: this.email,
                     password: this.password
                 });
+                let loader = this.$loading.show({
+                    loader: 'bars',
+                    opacity: 0.6,
+                    color:'blue'
+                });
+                setTimeout(() => loader.hide(), 1000)
             }
         }
     }
@@ -61,4 +70,10 @@ export default {
 </script>
 
 <style scoped>
+.sign-in {
+    background: url('https://cdn-images-1.medium.com/max/1600/1*DTkbYDqroiSzJ3k5c_x5Zg.jpeg');
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
 </style>

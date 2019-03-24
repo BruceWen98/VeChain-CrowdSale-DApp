@@ -1,7 +1,7 @@
 <template>
   <v-layout justify-center>
     <v-flex xs12>
-      <v-card>
+      <v-container fluid fill-height class="market-place">
         <v-container
           fluid
           grid-list-md
@@ -13,34 +13,52 @@
               class="hidden-sm-and-down"
               v-bind="{ [`xs6`]: true }"
             >
-              <v-card v-bind:color="selectColor()">
-                  <v-container
-                    fill-height
-                    fluid
-                    pa-2
-                  >
-                    <v-layout fill-height>
-                      <v-flex xs12 align-end flexbox>
-                        
-                        <div class="headline white--text" v-text="card.name"></div>
-                        <pre>
-                        </pre>   
-                        <div class="white--text">Auction: {{displayAuction(card)}}</div>
-                        <div class="white--text">Quantity on Sale: {{card.amount}}</div>
-                        <div v-if="card.auction==true" class="white--text">Min. Price: VET{{card.min_price}}</div>
-                        <div v-if="card.auction==true" class="white--text">Suggested Price: VET{{card.suggested_price}}</div>
-                        <div v-if="card.auction==false" class="white--text">Price: VET{{card.price}}</div>
-                        <div class="white--text">Description: {{card.description}}</div>
-                        <div class="white--text">Party paying TXN fee: {{displayTransaction(card)}}</div>
-                      </v-flex>
-                    </v-layout>
-                  </v-container>
+              <v-card color="white" class="rounded-card">
+                  <v-toolbar dark color="primary">
+                    <div class="headline white--text" v-text="card.productName">
+                    </div>
+                    <v-spacer></v-spacer>
+                      <div class="text-xs-center">
+                        <v-chip v-bind="{color: card.color}" text-color="white">
+                          <v-avatar>
+                            <v-icon v-if="card.icon=='computer'">computer</v-icon>
+                            <v-icon v-if="card.icon=='movie'">movie</v-icon>
+                            <v-icon v-if="card.icon=='games'">games</v-icon>
+                            <v-icon v-if="card.icon=='book'">book</v-icon>
+                            <v-icon v-if="card.icon=='room_service'">room_service</v-icon>
+                            <v-icon v-if="card.icon=='list_alt'">list_alt</v-icon>
+                          </v-avatar>
+                          {{card.productCategory}}
+                        </v-chip>
+                      </div>
+                  </v-toolbar>
+
+                  <v-list-tile>
+                    <v-list-tile-content>Quantity on Sale:</v-list-tile-content>
+                    <v-list-tile-content class="align-end">{{card.productAmount}}</v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile v-if="card.auction==true">
+                    <v-list-tile-content>Minimum Bid:</v-list-tile-content>
+                    <v-list-tile-content class="align-end">VET{{card.minPrice}}</v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile v-if="card.auction==true">
+                    <v-list-tile-content>Suggested Price:</v-list-tile-content>
+                    <v-list-tile-content class="align-end">VET{{card.suggestedPrice}}</v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile v-if="card.auction==false">
+                    <v-list-tile-content>Price:</v-list-tile-content>
+                    <v-list-tile-content class="align-end">VET{{card.price}}</v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile>
+                    <v-list-tile-content>Description:</v-list-tile-content>
+                    <v-list-tile-content class="align-end">{{card.description}}</v-list-tile-content>
+                  </v-list-tile>
                 <v-spacer></v-spacer>
 
                 <v-card-actions>
-                  <v-btn flat dark>View</v-btn>
+                  <v-btn color="primary" @click="uponClick(card.productId)">View</v-btn>
                   <v-spacer></v-spacer>
-                  <v-rating v-model="rating" half-increments></v-rating>
+                  <v-rating v-model="card.rating" half-increments></v-rating>
                 </v-card-actions>
               </v-card>
             </v-flex>
@@ -50,113 +68,153 @@
               :key="card.name"
               class="hidden-md-and-up"
               v-bind="{ [`xs12`]: true }"
-              v-bind:color="selectColor()"
             >
-              <v-card v-bind:color="selectColor()">
-                  <v-container
-                    fill-height
-                    fluid
-                    pa-2
-                  >
-                    <v-layout fill-height>
-                      <v-flex xs12 align-end flexbox>
-                        <div class="headline white--text" v-text="card.name"></div>
-                        <pre>
-                        </pre>
-                        <v-card> 
-                          <v-container
-                            fluid
-                            grid-list-md
-                          >
-                            <v-layout row wrap>
-                              <v-flex
-                                v-bind="{ [`xs6`]: true }"
-                              >
-                              <v-card>
-                                <v-container
-                                  fill-height
-                                  fluid
-                                  pa-2
-                                >
-                                  <v-layout fill-height>
-                                    <v-flex xs12 align-end flexbox>
-                                      <div>Quantity: {{card.amount}}</div>
-                                    </v-flex>
-                                  </v-layout>
-                                </v-container>
-                              </v-card>
-                              <v-card>
-                                <v-container
-                                  fill-height
-                                  fluid
-                                  pa-2
-                                >
-                                  <v-layout fill-height>
-                                    <v-flex xs12 align-end flexbox>
-                                      <div>Price: {{card.price}}VET</div>
-                                    </v-flex>
-                                  </v-layout>
-                                </v-container>
-                              </v-card>
-                              </v-flex>
-                            </v-layout>
-                          </v-container>
-                        </v-card>
-                      </v-flex>
-                    </v-layout>
-                  </v-container>
+              <v-card color="white" class="rounded-card">
+                  <v-toolbar dark color="primary">
+                    <div class="headline white--text" v-text="card.productName">
+                    </div>
+                    <v-spacer></v-spacer>
+                      <div class="text-xs-center">
+                        <v-chip v-bind="{color: card.color}" text-color="white">
+                          <v-avatar>
+                            <v-icon v-if="card.icon=='computer'">computer</v-icon>
+                            <v-icon v-if="card.icon=='movie'">movie</v-icon>
+                            <v-icon v-if="card.icon=='games'">games</v-icon>
+                            <v-icon v-if="card.icon=='book'">book</v-icon>
+                            <v-icon v-if="card.icon=='room_service'">room_service</v-icon>
+                            <v-icon v-if="card.icon=='list_alt'">list_alt</v-icon>
+                          </v-avatar>
+                          {{card.productCategory}}
+                        </v-chip>
+                      </div>
+                  </v-toolbar>
+
+                  <v-list-tile>
+                    <v-list-tile-content>Quantity on Sale:</v-list-tile-content>
+                    <v-list-tile-content class="align-end">{{card.productAmount}}</v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile v-if="card.auction==true">
+                    <v-list-tile-content>Minimum Bid:</v-list-tile-content>
+                    <v-list-tile-content class="align-end">VET{{card.minPrice}}</v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile v-if="card.auction==true">
+                    <v-list-tile-content>Suggested Price:</v-list-tile-content>
+                    <v-list-tile-content class="align-end">VET{{card.suggestedPrice}}</v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile v-if="card.auction==false">
+                    <v-list-tile-content>Price:</v-list-tile-content>
+                    <v-list-tile-content class="align-end">VET{{card.price}}</v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile>
+                    <v-list-tile-content>Description:</v-list-tile-content>
+                    <v-list-tile-content class="align-end">{{card.description}}</v-list-tile-content>
+                  </v-list-tile>
                 <v-spacer></v-spacer>
 
                 <v-card-actions>
-                  <v-btn flat>View</v-btn>
+                  <v-btn color="primary" @click="uponClick(card.productId)">View</v-btn>
                   <v-spacer></v-spacer>
-                  <v-rating v-model="rating" half-increments></v-rating>
+                  <v-rating v-model="card.rating" half-increments></v-rating>
                 </v-card-actions>
               </v-card>
             </v-flex>
           </v-layout>
         </v-container>
-      </v-card>
+      </v-container>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
+import dataStore from '../store/dataStore';
+import "../store/dataStore";
+
 export default {
     data: () => ({
         rating: 3.5,
         color: null,
         colors: ["indigo", "cyan darken-2", "blue-grey darken-2", "pink", "red", "purple", "deep-purple", "light-blue", "teal", "green", "light-green", "orange", "deep-orange"],
+        cards: null,
+        testIcon: "computer"
     }),
+    computed: {
+        isAuthenticated() {
+            return this.$store.getters.isAuthenticated;
+        }
+    },
     methods: {
         selectColor() {
             let x = Math.floor((Math.random()*this.colors.length));
             this.color = this.colors[x];
             return this.color
         },
-        displayAuction(card) {
-            if (card.auction == true) return "Yes";
-            return "No"
+        prepData() {
+          this.cards = dataStore.state.cards;
         },
-        displayTransaction(card) {
-            if (card.transaction == true) return "Buyer";
-            return "Seller"
-        },
-        prepData(){
-          this.cards = [
-            { id: '', name: 'E-Book', auction: true, amount: Math.floor(100*Math.random()), min_price: 10, suggested_price: 20, price: null, description: "This product is Excellent!", transaction: true },
-            { id: '', name: 'Digital Magazine', auction: false, amount: Math.floor(100*Math.random()), min_price: null, suggested_price: null, price: 100, description: "This product is Excellent!", transaction: false },
-            { id: '', name: 'Software Key', auction: true, amount: Math.floor(100*Math.random()), min_price: 500000, suggested_price: 10000000000, price: null, description: "This product is Excellent!", transaction: true }
-          ]
-          // superagent.get("/url", function name(params) {
-          //   this.cards=[]
+        uponClick(id) {
+          if (!this.isAuthenticated) {
+            console.log('Login to View')
+            this.$router.push('/sign-in');
+          } else {
+            dataStore.commit('updateId', id);
+            this.$router.push('/view');
           }
+        },
+        determineChipFormat(productCategory) {
+          let icon, color;
+          switch(productCategory) {
+            case "software":
+              icon = "computer";
+              color = "indigo";
+              break;
+            case "media":
+              icon = "movie";
+              color = "cyan darken-2";
+              break;
+            case "games":
+              icon = "games";
+              color = "pink";
+              break;
+            case "e-books":
+              icon = "book";
+              color = "green";
+              break;
+            case "services":
+              icon = "room_service";
+              color = "orange";
+              break;
+            case "others":
+              icon = "list_alt";
+              color = "yellow";
+              break;
+          }
+          let a = [icon, color];
+          return a;
+        },
+        editData(cards) {
+          for (let i=0; i<cards.length; i++) {
+            let x = cards[i];
+            let chip_data = this.determineChipFormat(x.productCategory);
+            this.cards[i].icon = chip_data[0];
+            this.cards[i].color = chip_data[1];
+          }
+        },
     },
-    beforeMount(){
-        this.prepData()
-    },
+    beforeMount() {
+      this.prepData();
+      this.editData(this.cards)
+    }
 }
 </script>
 
 <style scoped>
+.market-place {
+    background: url('https://cdn-images-1.medium.com/max/1600/1*DTkbYDqroiSzJ3k5c_x5Zg.jpeg');
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+.rounded-card{
+  border-radius: 15px
+}
 </style>
