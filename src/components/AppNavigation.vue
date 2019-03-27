@@ -75,6 +75,9 @@ export default {
         logout() {
             this.$store.dispatch('userSignOut');
         }
+    },
+    created() {
+        dataStore.commit('getProductList');
     }
 };
 </script>

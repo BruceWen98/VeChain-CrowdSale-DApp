@@ -225,6 +225,7 @@ export default {
                 if (product.auction == true) {
                     dataStore.dispatch('createAutionProduct', product)
                 }
+                
                 let loader = this.$loading.show({
                     loader: 'bars',
                     opacity: 0.6,

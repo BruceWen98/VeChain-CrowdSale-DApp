@@ -225,7 +225,7 @@ export default {
         },
 
         cards() {
-          let cardsinStore = dataStore.state.cards
+          let cardsinStore = dataStore.getters.getCards;
           for (let i=0; i<cardsinStore.length; i++) {
             let x = cardsinStore[i];
             let chip_data = this.determineChipFormat(x.productCategory);
@@ -303,9 +303,8 @@ export default {
           return a;
         }
     },
-    beforeMount() {
-      dataStore.commit('getProductList');
-    }
+    // beforeMount() {
+    // }
 }
 </script>
 

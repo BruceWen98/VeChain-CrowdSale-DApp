@@ -174,7 +174,7 @@ const dataStore = new Vuex.Store({
             state.user.authorisedSeller = authorisedSeller;
         },
         getProductList(state) {
-            window.CSF.getListProducts(1).then(output => {
+            window.CSF.getListProducts(2).then(output => {
                 console.log(output);
                 let currentProducts = [];
                 for (let i=0; i<output.length; i++) {
@@ -196,7 +196,8 @@ const dataStore = new Vuex.Store({
                     currentProducts.push(card);
                 }
                 //state.cards = [...state.cards, ...currentProducts];
-                state.cards = [...new Set([...state.cards, ...currentProducts])]; //   => remove duplication
+                let nonDuplicatedCards = [...new Set([...state.cards, ...currentProducts])]; //   => remove duplication
+                Vue.set(state, 'cards', [...nonDuplicatedCards])
             });
         }
     },
@@ -233,7 +234,7 @@ const dataStore = new Vuex.Store({
                 }
             });
         },
-        createNewProduct(state, payload) {
+        createNewProduct(state, payload, context) {
             console.log(payload);
             let _productId = payload.productId;
             let _sellerId = payload.sellerId;
@@ -248,6 +249,7 @@ const dataStore = new Vuex.Store({
                 _weblink,_productCategory,_productAmount,_price);
             promise.then((output) => {
                 console.log(output);
+                context.commit('getProductList');
             });
         },
         createAutionProduct(state, payload) {
@@ -270,6 +272,9 @@ const dataStore = new Vuex.Store({
     getters: {
         getCardById: state => id => {
             return state.cards.find(card => card.productId === id);
+        },
+        getCards(state) {
+            return state.cards;
         }
     }
 });
