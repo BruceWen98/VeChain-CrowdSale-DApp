@@ -33,6 +33,11 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 Vue.use(Loading);
 
+import VueNotification from "@kugatsu/vuenotification";
+Vue.use(VueNotification, {});
+
+import dataStore from '../store/dataStore';
+
 export default {
     name: 'Signin',
     data() {
@@ -63,6 +68,13 @@ export default {
                     color:'blue'
                 });
                 setTimeout(() => loader.hide(), 1000)
+                this.$notification.new(`${this.email} has logged in!`, { timer: 4 });
+
+                let loginUser = this.email;
+                console.log(loginUser);
+                dataStore.commit('updateLoginUser', loginUser);
+                dataStore.dispatch('checkLoginUserIsAuthorisedSeller')
+                this.$router.push('/about');
             }
         }
     }

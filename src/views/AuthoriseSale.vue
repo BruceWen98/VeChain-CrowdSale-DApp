@@ -24,12 +24,15 @@
                         <v-text-field prepend-icon="description" name="info" label="Information about yourself"
                             required v-model='info' :rules="infoRules">
                         </v-text-field>
+                        <v-text-field prepend-icon="account_balance" name="walletId" label="Enter Wallet ID"
+                            required v-model='walletId'>
+                        </v-text-field>
                     </v-form>
                 </v-card-text>
                 </v-card>
                 <v-toolbar v-if="this.authorisedSeller==false">
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" :disabled="!valid" @click="submit(true)">Submit Sale Authorisation Request</v-btn>
+                    <v-btn color="primary" :disabled="!valid" @click="submit">Submit Sale Authorisation Request</v-btn>
                 </v-toolbar>
                 <v-toolbar>
                     <v-spacer></v-spacer>
@@ -43,6 +46,10 @@
 <script>
 import dataStore from '../store/dataStore';
 
+import Vue from 'vue';
+import VueNotification from "@kugatsu/vuenotification";
+Vue.use(VueNotification, {});
+
 export default {
     name: 'AuthoriseSale',
     data() {
@@ -52,11 +59,11 @@ export default {
             userId: '',
             walletId: '',
             authorisedSeller: false,
-            authorisedSellerMessage: '',
             companyName:'',
             companyWebsite:'',
             sellItem:'',
             info:'',
+            walletId: '',
 
             companyNameRules: [
                 v => !!v || 'Company Name is required'
@@ -72,24 +79,27 @@ export default {
             ]
         }     
     },
+    computed:{ 
+        getUser() {
+            return this.$store.getters.getUser;
+        }
+    },
     methods: {
         prepData() {
-            this.userEmail = dataStore.state.user.userEmail;
-            this.userId = dataStore.state.user.userId;
-            this.walletId = dataStore.state.user.walletId;
-            if (dataStore.state.user.authorisedSeller==true) {
-                this.authorisedSeller = true;
-                this.authorisedSellerMessage = 'You are authorised to sell!';
-            }
-            if (dataStore.state.user.authorisedSeller==false) {
-                this.authorisedSeller = false;
-                this.authorisedSellerMessage = 'Please request sale access.';
-            }
-            
+            this.userEmail = this.getUser.user.email;
+            this.userId = this.getUser.user.uid;        
         },
-        submit(authorisedSeller) {
-            dataStore.commit('updateAuthorisedSeller', authorisedSeller);
+        submit() {
+            let seller = {
+                userEmail: this.userEmail,
+                sellerId: this.userId,
+                walletId: this.walletId,
+                seller: this.walletId
+            }
+            dataStore.dispatch('checkLoginUserIsAuthorisedSeller')
+            dataStore.dispatch('registerSeller', seller);
             this.$router.push('/about');
+            this.$notification.new(`${this.userEmail} has been approved to conduct sales!`, { timer: 4 });
         }
     },
     beforeMount() {

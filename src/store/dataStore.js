@@ -30,7 +30,7 @@ const dataStore = new Vuex.Store({
             },
             {
                 productId: 1,
-                sellerId: 'bruce@morpheuslabs.io',
+                sellerId: 'IYPvwAIP69fTvdKUFyGlLCIq27S2',
                 sellerWallet: '13avwefhweiofh1123',
                 productName: 'The Economist',
                 auction: false,
@@ -43,7 +43,7 @@ const dataStore = new Vuex.Store({
                 weblink: 'google.com',
                 rating: 4,
                 productCategory: 'media',
-                numberSold: 200,
+                numberSold: 59,
                 numberOfBids: null,
                 averageBidPrice: null,
                 auctionStatus: null,
@@ -52,7 +52,7 @@ const dataStore = new Vuex.Store({
             },
             {
                 productId: 2,
-                sellerId: 'sang@morpheuslabs.io',
+                sellerId: 'IYPvwAIP69fTvdKUFyGlLCIq27S2',
                 sellerWallet: '13avwefhweiofh1123',
                 productName: 'Microsoft 365 1-year Subscription',
                 auction: true,
@@ -152,10 +152,13 @@ const dataStore = new Vuex.Store({
         ],
         id: 0,
 
+        loginUser: {
+            userEmail: ''
+        },
         user: {
-            userEmail: 'testing@gmail.com',
-            userId: 'test',
-            walletId: 'test',
+            userEmail: '',
+            userId: '',
+            walletId: '',
             authorisedSeller: false
         }
     },
@@ -163,16 +166,114 @@ const dataStore = new Vuex.Store({
         updateId(state, id) {
             state.id = id;
         },
+        updateLoginUser(state, loginUser) {
+            state.loginUser.userEmail = loginUser;
+            state.user.userEmail = loginUser;
+        },
         updateAuthorisedSeller(state, authorisedSeller) {
             state.user.authorisedSeller = authorisedSeller;
+        },
+        getProductList(state) {
+            window.CSF.getListProducts(1).then(output => {
+                console.log(output);
+                let currentProducts = [];
+                for (let i=0; i<output.length; i++) {
+                    let oneProduct = output[i];
+                    let card = {};
+                    card.productId = oneProduct.productId;
+                    card.sellerId = oneProduct.sellerId;
+                    //no sellerWallet
+                    //no minPrice
+                    //no suggestedPrice
+                    //no Price
+                    card.productName = oneProduct.productName;
+                    card.description = oneProduct.description;
+                    card.productCategory = oneProduct.productCategory;
+                    card.auction = oneProduct.auction;
+                    card.productAmount = oneProduct.productAmount;
+                    card.numberSold = oneProduct.numberSold;
+                    card.address = oneProduct.address;
+                    currentProducts.push(card);
+                }
+                //state.cards = [...state.cards, ...currentProducts];
+                state.cards = [...new Set([...state.cards, ...currentProducts])]; //   => remove duplication
+            });
         }
     },
+    actions: {
+        registerSeller(state, payload) {
+            console.log(payload);
 
+            let sellerName = payload.userEmail;
+            let sellerId = payload.sellerId;
+            let wallet = payload.walletId;
+            let seller = payload.seller;
+            // let sellerName = "Seller@gmail.com";
+            // let sellerId = "SellerID";
+            // let wallet = "0xc8367bab4d0e61a53fdf3d637c5e8d32c8ad9e7f";
+            // let seller = "0xc8367bab4d0e61a53fdf3d637c5e8d32c8ad9e7f";
+            // console.log("args=", sellerName, sellerId, wallet, seller)
+
+            window.CSF.registerSeller(sellerName, sellerId, wallet, seller).then(output => {
+                console.log(output);
+            })
+        },
+        checkLoginUserIsAuthorisedSeller(context) {
+            window.CSF.getListSellers().then(output => {
+                let x = output;
+                console.log(x);
+                console.log(this.state.loginUser.userEmail);
+                for (let i=0; i <x.length; i++) {
+                    let tempObject = x[i];
+                    if (tempObject.sellerName == this.state.loginUser.userEmail) {
+                        context.commit('updateAuthorisedSeller', true);
+                        console.log('updateuser success');
+                        break;
+                    }
+                }
+            });
+        },
+        createNewProduct(state, payload) {
+            console.log(payload);
+            let _productId = payload.productId;
+            let _sellerId = payload.sellerId;
+            let _productName = payload.productName;
+            let _description = payload.description;
+            let _weblink = payload.weblink;
+            let _productCategory = payload.productCategory;
+            let _productAmount = payload.productAmount;
+            let _price = Util.numberToWei(payload.price);
+
+            let promise = window.CSF.createNewProduct(_productId, _sellerId,_productName,_description,
+                _weblink,_productCategory,_productAmount,_price);
+            promise.then((output) => {
+                console.log(output);
+            });
+        },
+        createAutionProduct(state, payload) {
+            let _productId = payload.productId;
+            let _sellerId = payload.sellerId;
+            let _productName = payload.productName;
+            let _description = payload.description;
+            let _weblink = payload.weblink;
+            let _productCategory = payload.productCategory;
+            let _productAmount = payload.productAmount;
+            let _minPrice = Util.numberToWei(payload.minPrice);
+
+            let promise = window.CSF.createAuctionProduct(_productId, _sellerId,_productName,_description,
+                _weblink,_productCategory,_productAmount,_minPrice);
+            promise.then((output) => {
+                console.log(output);
+            });
+        },
+    },
     getters: {
         getCardById: state => id => {
             return state.cards.find(card => card.productId === id);
         }
     }
 });
+
+window.dataStore = dataStore;
 
 export default dataStore;

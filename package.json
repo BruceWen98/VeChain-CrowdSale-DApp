@@ -12,9 +12,13 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0-rc.1",
+    "@kugatsu/vuenotification": "^1.1.2",
     "axios": "^0.18.0",
+    "bignumber.js": "^8.1.1",
     "firebase": "^5.8.6",
+    "gsap": "^2.1.2",
     "sass-loader": "^7.1.0",
+    "uuid": "^3.3.2",
     "vue": "^2.5.17",
     "vue-dropdowns": "^1.0.6",
     "vue-dynamic-dropdown": "^1.0.9",

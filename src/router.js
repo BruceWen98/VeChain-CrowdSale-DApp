@@ -20,7 +20,7 @@ const router = new Router({
             name: 'about',
             component: () => import('./views/About.vue'),
             meta: {
-                authRequired: true,
+                authRequired: true
             }
         },
         {
@@ -65,6 +65,11 @@ const router = new Router({
             path: '/authorise-sale',
             name: 'authorisesale',
             component: () => import('./views/AuthoriseSale.vue')
+        },
+        {
+            path: '/test',
+            name: 'test',
+            component: () => import('./views/Test.vue')
         }
     ]
 });

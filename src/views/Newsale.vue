@@ -110,7 +110,12 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 Vue.use(Loading);
 
+import VueNotification from "@kugatsu/vuenotification";
+Vue.use(VueNotification, {});
+
 import dataStore from '../store/dataStore';
+
+const uuidv4 = require('uuid/v4');
 
 //Change Rocker switch label name.
 function changelabelName(onName, offName) {
@@ -199,6 +204,7 @@ export default {
                 this.$router.push('/sign-in');
             } else {
                 let product={
+                    productId: uuidv4(),
                     productName: this.product_name,
                     auction: this.auction,
                     productAmount: this.number_of_products,
@@ -209,17 +215,23 @@ export default {
                     weblink: this.product_weblink,
                     transaction: this.ifBuyerPay,
                     productCategory: this.category,
-                    sellerId: this.getUser.user.uid
+                    sellerId: this.getUser.user.email
                 }
-                console.log(product)
-                //superagent.post()
+                console.log(product);
 
+                if (product.auction == false) {
+                    dataStore.dispatch('createNewProduct', product)
+                }
+                if (product.auction == true) {
+                    dataStore.dispatch('createAutionProduct', product)
+                }
                 let loader = this.$loading.show({
                     loader: 'bars',
                     opacity: 0.6,
                     color:'blue'
                 });
                 setTimeout(() => loader.hide(), 1000)
+                this.$notification.new(`Your ${this.product_name} Sale has been Added to the Marketplace!`, { timer: 4 });
             }
         },
         prepData() {

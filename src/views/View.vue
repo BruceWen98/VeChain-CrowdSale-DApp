@@ -24,15 +24,15 @@
         <v-list-tile-content>Number of Products:</v-list-tile-content>
         <v-list-tile-content class="align-end">{{ card.productAmount }}</v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="card.minPrice !== null">
+        <v-list-tile v-if="card.auction==true">
         <v-list-tile-content>Minimum Price:</v-list-tile-content>
         <v-list-tile-content class="align-end">{{ card.minPrice }} VET</v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="card.suggested_price!==null">
+        <v-list-tile v-if="card.auction==true">
         <v-list-tile-content>Suggested Price:</v-list-tile-content>
         <v-list-tile-content class="align-end">{{ card.suggestedPrice }} VET</v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="card.price!==null">
+        <v-list-tile v-if="card.auction==false">
         <v-list-tile-content>Price:</v-list-tile-content>
         <v-list-tile-content class="align-end">{{ card.price }} VET</v-list-tile-content>
         </v-list-tile>
@@ -54,7 +54,7 @@
     </v-list>
     </v-card>
 
-    <v-toolbar height="150px" color="brown lighten-3" v-if="card.auction==true && card.auctionStatus==true">
+    <v-toolbar height="150px" color="brown lighten-3" v-if="card.auction==true && card.auctionStatus==true && card.sellerId!=this.getUser.user.uid">
         <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field prepend-icon="attach_money" name="bid_price" label="Your Bid (in VET)"
                 required v-model='bid_price' :rules="priceRules">
@@ -71,26 +71,28 @@
         </v-btn>
     </v-toolbar>
 
-    <v-toolbar height="100px" v-if="card.auction==true">
-        <div class="text-xs-center" v-if="card.auctionStatus==true">
-            <v-chip color="green" text-color="white">
+    <v-card v-if="card.auction==true">
+      <v-container fill-height>
+        <v-layout row wrap align-center>
+          <v-flex class="text-xs-center">
+            <v-chip color="green" text-color="white" v-if="card.auctionStatus==true">
                 <v-avatar>
                 <v-icon>account_balance</v-icon>
                 </v-avatar>
                 Currently on Auction
             </v-chip>
-        </div>
-        <div class="text-xs-center" v-if="card.auctionStatus==false">
-            <v-chip color="red" text-color="white">
+            <v-chip color="red" text-color="white" v-if="card.auctionStatus==false">
                 <v-avatar>
                 <v-icon>account_balance</v-icon>
                 </v-avatar>
                 Auction Closed
             </v-chip>
-        </div>
-    </v-toolbar>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card>
 
-    <v-toolbar height="100px" color="brown lighten-3" v-if="card.auction==false">
+    <v-toolbar height="100px" color="brown lighten-3" v-if="card.auction==false && card.sellerId!=this.getUser.user.uid">
         <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field prepend-icon="add_shopping_cart" name="buy_number" label="How Many?"
                 required v-model='buy_number' :rules="buyNumberRules">
@@ -119,6 +121,19 @@
         </v-list>
     </v-card>
 
+    <v-card v-if="card.auctionStatus==true">
+      <v-container fill-height>
+        <v-layout row wrap align-center>
+          <v-flex class="text-xs-center">
+            <v-btn color="green" dark @click="finishAuction">Finish Auction</v-btn>
+            <pre>
+            </pre>
+            <div><em>Disclaimer: when you click this button, the top bidders' money will be transferred to you. You will officially close the auction.</em></div>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card>
+
     <v-card v-if="card.auction==false">
         <v-card-title v-if="card.auction==true" class="justify-center"><h2>Auction History</h2></v-card-title>
         <v-card-title v-if="card.auction==false" class="justify-center"><h2>Sale History</h2></v-card-title>
@@ -142,6 +157,9 @@ import Vue from 'vue';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 Vue.use(Loading);
+
+import VueNotification from "@kugatsu/vuenotification";
+Vue.use(VueNotification, {});
 
 export default {
     name: 'View',
@@ -186,6 +204,7 @@ export default {
                 color:'blue'
             });
             setTimeout(() => loader.hide(), 1000)
+            this.$notification.new(`Your purchase of ${this.buy_number} ${this.card.productName} has been submitted!`, { timer: 4 });
         },
         buy() {
             let buy_obj={
@@ -202,6 +221,17 @@ export default {
                 color:'blue'
             });
             setTimeout(() => loader.hide(), 1000)
+            this.$notification.new(`Your purchase of ${this.buy_number} ${this.card.productName} has been submitted!`, { timer: 4 });
+        },
+        finishAuction() {
+            //Sang's code here
+            let loader = this.$loading.show({
+                loader: 'bars',
+                opacity: 0.6,
+                color:'blue'
+            });
+            setTimeout(() => loader.hide(), 1000)
+            this.$notification.new(`Your have ended the auction of ${this.card.productName}`, { timer: 4 });
         }
     },
     beforeMount() {

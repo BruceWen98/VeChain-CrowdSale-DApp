@@ -12,14 +12,6 @@
                         <v-list-tile-content class="align-end">{{this.userEmail}}</v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
-                        <v-list-tile-content>Wallet Address:</v-list-tile-content>
-                        <v-list-tile-content class="align-end">{{this.walletId}}</v-list-tile-content>
-                    </v-list-tile>
-                    <v-list-tile>
-                        <v-list-tile-content>Your User UID:</v-list-tile-content>
-                        <v-list-tile-content class="align-end">{{this.userId}}</v-list-tile-content>
-                    </v-list-tile>
-                    <v-list-tile>
                         <v-list-tile-content>Sale Authorization:</v-list-tile-content>
                         <v-list-tile-content class="align-end">{{this.authorisedSellerMessage}}</v-list-tile-content>
                     </v-list-tile>
@@ -34,36 +26,20 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import dataStore from '../store/dataStore';
 
 export default {
     name: 'About',
-    data() {
-        return{
-            userEmail: '',
-            userId: '',
-            walletId: '',
-            authorisedSeller: false,
-            authorisedSellerMessage: ''
-        }     
-    },
-    methods: {
-        prepData() {
-            this.userEmail = dataStore.state.user.userEmail;
-            this.userId = dataStore.state.user.userId;
-            this.walletId = dataStore.state.user.walletId;
-            if (dataStore.state.user.authorisedSeller==true) {
-                this.authorisedSeller = true;
-                this.authorisedSellerMessage = 'You are authorised to sell!';
-            }
-            if (dataStore.state.user.authorisedSeller==false) {
-                this.authorisedSeller = false;
-                this.authorisedSellerMessage = 'Please request sale access.';
-            }
-        },
-    },
-    beforeMount() {
-      this.prepData();
+
+    computed: {
+        userEmail() { return dataStore.state.user.userEmail },
+        userId() { return dataStore.state.user.userId },
+        walletId() { return dataStore.state.user.walletId },
+        authorisedSeller() { return dataStore.state.user.authorisedSeller },
+        authorisedSellerMessage() { 
+            return dataStore.state.user.authorisedSeller? 'You are authorised to sell!': 'Please request sale access.'
+        }
     }
 }
 </script>

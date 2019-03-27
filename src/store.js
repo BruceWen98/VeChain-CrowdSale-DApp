@@ -26,7 +26,6 @@ export default new Vuex.Store({
                 .then(user => {
                     commit('setUser', user);
                     commit('setIsAuthenticated', true);
-                    router.push('/about');
                 })
                 .catch(() => {
                     commit('setUser', null);
