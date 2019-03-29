@@ -88,7 +88,7 @@
                 </v-avatar>
                 Currently on Auction
             </v-chip>
-            <v-chip color="red" text-color="white" v-if="card.auctionStatus==false">
+            <v-chip color="red" text-color="white" v-if="card.auctionStatus==false || auctionEnabled ==false">
                 <v-avatar>
                 <v-icon>account_balance</v-icon>
                 </v-avatar>
@@ -196,13 +196,13 @@
             <span>(For Seller) Key in the wallet addresses of successful bidders for your {{card.productName}}:</span>
             <p style="white-space: pre-line;">{{ message }}</p>
             <br>
-            <textarea v-model="auctionWinnerAddresses" placeholder="Separate addresses by commas (,)"></textarea>
+            <textarea v-model="auctionWinnerAddresses" placeholder="Separate your winning addresses by commas (,)"></textarea>
             <pre>
             </pre>
             <v-btn color="green" dark :disabled=!auctionEnabled @click="finishAuction">Finish Auction</v-btn>
             <pre>
             </pre>
-            <div><em>Disclaimer: when you click this button, the top bidders' money will be transferred to you. You will officially close the auction.</em></div>
+            <div v-if="auctionEnabled==true"><em>Disclaimer: You must select a total number of bidders that match your product amount. When you click this button, the bids from the bidders you selected will be transferred to you. The other bidders' money will be returned back to them. You will officially close the auction.</em></div>
           </v-flex>
         </v-layout>
       </v-container>
@@ -212,8 +212,8 @@
         <v-layout row wrap align-center>
           <v-flex class="text-xs-center">
             <div>Finish Auction Transaction Details:</div>
-            <div v-if="saleEnabled==false"> TxId: {{getAuctionTxId}}</div>
-            <div v-if="saleEnabled==false"> Signer: {{getAuctionSigner}}</div>
+            <div v-if="auctionEnabled==false"> TxId: {{getAuctionTxId}}</div>
+            <div v-if="auctionEnabled==false"> Signer: {{getAuctionSigner}}</div>
           </v-flex>
         </v-layout>
       </v-container>

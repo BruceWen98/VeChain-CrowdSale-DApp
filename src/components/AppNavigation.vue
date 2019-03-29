@@ -13,10 +13,10 @@
                     <v-list-tile>
                         <v-btn flat to="/Newsale">New Sale</v-btn>
                     </v-list-tile>
-                    <v-divider></v-divider>
+                    <!-- <v-divider></v-divider>
                     <v-list-tile>
                         <v-btn flat to="/History">Market History</v-btn>
-                    </v-list-tile>
+                    </v-list-tile> -->
                     <v-divider></v-divider>
                     <v-list-tile>
                         <v-btn flat to="/Howitworks">The CrowdSale Model</v-btn>
@@ -42,7 +42,7 @@
             </router-link>
             <v-btn flat class="hidden-sm-and-down nav-menu" to="/marketplace" data-cy="menuBtn">Marketplace</v-btn>
             <v-btn flat class="hidden-sm-and-down nav-menu" to="/newsale" data-cy="menuBtn">New Sale</v-btn>
-            <v-btn flat class="hidden-sm-and-down nav-menu" to="/history" data-cy="menuBtn">Market History</v-btn>
+            <!-- <v-btn flat class="hidden-sm-and-down nav-menu" to="/history" data-cy="menuBtn">Market History</v-btn> -->
             <v-btn flat class="hidden-sm-and-down nav-menu" to="/howitworks" data-cy="menuBtn">The CrowdSale Model</v-btn>
             <v-spacer class="hidden-sm-and-down"></v-spacer>
             <div v-if="!isAuthenticated" class="hidden-sm-and-down">

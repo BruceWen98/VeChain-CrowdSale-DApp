@@ -60,21 +60,45 @@ export default {
             if (this.$refs.form.validate()) {
                 this.$store.dispatch('userLogin', {
                     email: this.email,
-                    password: this.password
-                });
-                let loader = this.$loading.show({
-                    loader: 'bars',
-                    opacity: 0.6,
-                    color:'blue'
-                });
-                setTimeout(() => loader.hide(), 1000)
-                this.$notification.new(`${this.email} has logged in!`, { timer: 4 });
+                    password: this.password,
+                    callback: () => {
+                        let loader = this.$loading.show({
+                            loader: 'bars',
+                            opacity: 0.6,
+                            color:'blue'
+                        });
+                        setTimeout(() => loader.hide(), 1000)
+                        this.$notification.new(`${this.email} has logged in!`, { timer: 4 });
 
-                let loginUser = this.email;
-                console.log(loginUser);
-                dataStore.commit('updateLoginUser', loginUser);
-                dataStore.dispatch('checkLoginUserIsAuthorisedSeller')
-                this.$router.push('/about');
+                        let loginUser = this.email;
+                        console.log(loginUser);
+                        dataStore.commit('updateLoginUser', loginUser);
+                        dataStore.dispatch('checkLoginUserIsAuthorisedSeller')
+                        this.$router.push('/about');
+                    },
+                    failureCallback: () => {
+                        let loader = this.$loading.show({
+                            loader: 'bars',
+                            opacity: 0.6,
+                            color:'blue'
+                        });
+                        setTimeout(() => loader.hide(), 1000)
+                        this.$notification.new('Login Failure!', { timer: 4 });
+                    }
+                });
+                // let loader = this.$loading.show({
+                //     loader: 'bars',
+                //     opacity: 0.6,
+                //     color:'blue'
+                // });
+                // setTimeout(() => loader.hide(), 1000)
+                // this.$notification.new(`${this.email} has logged in!`, { timer: 4 });
+
+                // let loginUser = this.email;
+                // console.log(loginUser);
+                // dataStore.commit('updateLoginUser', loginUser);
+                // dataStore.dispatch('checkLoginUserIsAuthorisedSeller')
+                // this.$router.push('/about');
             }
         }
     }

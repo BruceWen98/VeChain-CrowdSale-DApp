@@ -192,7 +192,8 @@ const dataStore = new Vuex.Store({
         },
         getProductList(state) {
             window.CSF.getListProducts(1).then(output => {
-                console.log(output);
+                // console.log("calling mutations to update products. ouput=", output.length);
+                // console.log("calling mutations to update products", output);
                 let currentProducts = [];
                 for (let i=0; i<output.length; i++) {
                     let oneProduct = output[i];
@@ -211,7 +212,7 @@ const dataStore = new Vuex.Store({
                     card.price = oneProduct.price / 1e+18;
                     card.minPrice = oneProduct.minPrice / 1e+18;
                     card.saleStatus = oneProduct.saleStatus;
-                    card.auctionStatus = true;
+                    card.auctionStatus = oneProduct.auctionStatus;
                     currentProducts.push(card);
                 }
                 //state.cards = [...state.cards, ...currentProducts];
@@ -284,10 +285,10 @@ const dataStore = new Vuex.Store({
             
             promise.then((output) => {
                 console.log(output);
-                commit('getProductList');
+                setTimeout(()=>commit('getProductList'),1000); //delay 1s to make sure getProductList returns output in time
             });
         },
-        createAutionProduct(state, payload) {
+        createAutionProduct({state, commit}, payload) {
             let _productId = payload.productId;
             let _sellerId = payload.sellerId;
             let _productName = payload.productName;
@@ -301,6 +302,7 @@ const dataStore = new Vuex.Store({
                 _weblink,_productCategory,_productAmount,_minPrice);
             promise.then((output) => {
                 console.log(output);
+                setTimeout(()=>commit('getProductList'),5000); //delay 1s to make sure getProductList returns output in time
             });
         },
         getBuyHistory(state, payload) {
@@ -330,6 +332,7 @@ const dataStore = new Vuex.Store({
             });
         },
         finishAuctionSale(state, sendData) {
+            //sendData = [this.card, this.auctionWinnerAddresses]
             console.log(sendData)
             let address = sendData[0].address;
             let auctionWinnerAddresses = sendData[1];
@@ -341,7 +344,7 @@ const dataStore = new Vuex.Store({
                 let signer = output.signer;
                 let txId = output.txid;
                 console.log([signer, txId])
-                dataStore.commit('updateFinishAuction', [signer, txId, card])
+                dataStore.commit('updateFinishAuction', [signer, txId, sendData[0]])
             });
         }
 

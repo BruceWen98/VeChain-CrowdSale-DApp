@@ -99,7 +99,7 @@ export default {
             dataStore.dispatch('checkLoginUserIsAuthorisedSeller')
             dataStore.dispatch('registerSeller', seller);
             this.$router.push('/about');
-            this.$notification.new(`${this.userEmail} has been approved to conduct sales!`, { timer: 4 });
+            this.$notification.new(`${this.userEmail} has submitted Seller Authorisation Request!`, { timer: 4 });
         }
     },
     beforeMount() {
