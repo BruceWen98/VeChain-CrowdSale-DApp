@@ -1,0 +1,4 @@
+1. run thor solo mode with command `bin/thor solo --on-demand`
+2. run web3-gear `web3-gear`
+3. deploy smart contract on VeChain `truffle migrate`
+4. get CrowdSaleFactory contract address and to configure client

@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <script src="lib/bignumber.min.js"></script>
+        <script type="text/javascript" src="Utils.js"></script>
+        <script type="text/javascript" src="Connex.js"></script>
+        <script type="text/javascript" src="CrowdSaleFactory.js"></script>
+        <script type="text/javascript" src="AuctionProduct.js"></script>
+        <script type="text/javascript" src="Product.js"></script>
+        <script type="text/javascript" src="demo.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <h3>Seller</h3>
+        <button onclick="getListSellers()">GetListSeller</button><br/>
+        <button onclick="registerSeller();">Register new Seller</button>
+        <h3>View & Control Sale</h3>
+        <button onclick="getProductList();">getAllProductList (page 1)</button><br/>
+        <button>getProductListOf A Seller ()</button><br/><br/>
+
+        <!-- Product control -->
+        <button onclick="getProductInfo()">GetProduct Info (address)</button>
+        <button onclick="getBuyHistory()">Get Buy History (address)</button>
+        Product Address: <input id="productAddress"/><br/>
+        <button onclick="finishProductSale()">Finish Product Sale</button><br/><br/>
+
+        <!-- Auction Product control -->
+        <button onclick="getAuctionProductInfo()">Get AuctionProduct Info (address)</button>
+        <button onclick="getBidHistory()">Get Bid History (address)</button>
+        AuctionProduct Address: <input id="auctionProductAddress"/><br/>
+        <button onclick="finishAuctionSale()">Finish Auction</button>
+        Winer Addresses (separated by comma): <input id="winerAddress"/><br/>
+
+        <h3>Create Product</h3>
+        <button onclick="createNewProduct();">Create new Product</button><br/>
+        <button onclick="createAutionProduct()">Create new AuctionProduct</button><br/>
+
+
+
+        <div id="console" style="border: solid 1px black; width: 95%;height:200px;overflow-y:scroll;">
+
+        </div>
+
+    </body>
+</html>
