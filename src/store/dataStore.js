@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 const dataStore = new Vuex.Store({
     state: {
-        cards: [
+        staticCards: [
             {
                 productId: 0,
                 sellerId: 'wen@morpheuslabs.io',
@@ -26,7 +26,8 @@ const dataStore = new Vuex.Store({
                 averageBidPrice: 20.5,
                 auctionStatus: true,
                 auctionEarnings: null,
-                successfulBidders: null
+                successfulBidders: null,
+                address: '0x2a56245745e0178764d2becc46dd46f4c11379ca'
             },
             {
                 productId: 1,
@@ -48,7 +49,8 @@ const dataStore = new Vuex.Store({
                 averageBidPrice: null,
                 auctionStatus: null,
                 auctionEarnings: null,
-                successfulBidders: null
+                successfulBidders: null,
+                address: '0x2a56245745e0178764d2becc46dd46f4c11379ca'
             },
             {
                 productId: 2,
@@ -70,7 +72,8 @@ const dataStore = new Vuex.Store({
                 averageBidPrice: 80000,
                 auctionStatus: true,
                 auctionEarnings: null,
-                successfulBidders: null
+                successfulBidders: null,
+                address: '0x2a56245745e0178764d2becc46dd46f4c11379ca'
             },
             {
                 productId: 3,
@@ -92,7 +95,8 @@ const dataStore = new Vuex.Store({
                 averageBidPrice: null,
                 auctionStatus: null,
                 auctionEarnings: null,
-                successfulBidders: null
+                successfulBidders: null,
+                address: '0x2a56245745e0178764d2becc46dd46f4c11379ca'
             },
             {
                 productId: 4,
@@ -114,7 +118,8 @@ const dataStore = new Vuex.Store({
                 averageBidPrice: 1500000,
                 auctionStatus: false,
                 auctionEarnings: 2500000,
-                successfulBidders: ['bidder@gmail.com']
+                successfulBidders: ['bidder@gmail.com'],
+                address: '0x2a56245745e0178764d2becc46dd46f4c11379ca'
             },
             {
                 productId: 5,
@@ -147,9 +152,11 @@ const dataStore = new Vuex.Store({
                     '7@gmail.com',
                     '8@gmail.com',
                     '9@gmail.com'
-                ]
+                ],
+                address: '0x2a56245745e0178764d2becc46dd46f4c11379ca'
             }
         ],
+        cards: [],
         id: 0,
 
         loginUser: {
@@ -160,6 +167,16 @@ const dataStore = new Vuex.Store({
             userId: '',
             walletId: '',
             authorisedSeller: false
+        },
+        buyHistoryForAProduct: [],
+        bidHistoryForAProduct: [],
+        finishSaleData: {
+            signer: '',
+            txId: ''
+        },
+        finishAuctionData: {
+            signer: '',
+            txId: ''
         }
     },
     mutations: {
@@ -174,7 +191,7 @@ const dataStore = new Vuex.Store({
             state.user.authorisedSeller = authorisedSeller;
         },
         getProductList(state) {
-            window.CSF.getListProducts(2).then(output => {
+            window.CSF.getListProducts(1).then(output => {
                 console.log(output);
                 let currentProducts = [];
                 for (let i=0; i<output.length; i++) {
@@ -182,10 +199,6 @@ const dataStore = new Vuex.Store({
                     let card = {};
                     card.productId = oneProduct.productId;
                     card.sellerId = oneProduct.sellerId;
-                    //no sellerWallet
-                    //no minPrice
-                    //no suggestedPrice
-                    //no Price
                     card.productName = oneProduct.productName;
                     card.description = oneProduct.description;
                     card.productCategory = oneProduct.productCategory;
@@ -193,12 +206,34 @@ const dataStore = new Vuex.Store({
                     card.productAmount = oneProduct.productAmount;
                     card.numberSold = oneProduct.numberSold;
                     card.address = oneProduct.address;
+                    card.weblink = oneProduct.weblink;
+                    card.transaction = oneProduct.transaction; //what is this for?
+                    card.price = oneProduct.price / 1e+18;
+                    card.minPrice = oneProduct.minPrice / 1e+18;
+                    card.saleStatus = oneProduct.saleStatus;
+                    card.auctionStatus = true;
                     currentProducts.push(card);
                 }
                 //state.cards = [...state.cards, ...currentProducts];
-                let nonDuplicatedCards = [...new Set([...state.cards, ...currentProducts])]; //   => remove duplication
-                Vue.set(state, 'cards', [...nonDuplicatedCards])
+                // let nonDuplicatedCards = [...new Set([...state.cards, ...currentProducts])]; //   => remove duplication
+                Vue.set(state, 'cards', [...currentProducts, ...state.staticCards])
             });
+        },
+        updateBuyHistoryForAProduct(state, buyHistory) {
+            state.buyHistoryForAProduct = buyHistory;
+        },
+        updateBidHistoryForAProduct(state, bidHistory) {
+            state.bidHistoryForAProduct = bidHistory
+        },
+        updateFinishSale(state, payload) {
+            state.finishSaleData.signer = payload[0];
+            state.finishSaleData.txId = payload[1];
+            payload[2].saleStatus = false; // payload[2] is a card
+        },
+        updateFinishAuction(state, payload) {
+            state.finishAuctionData.signer = payload[0];
+            state.finishAuctionData.txId = payload[1];
+            payload[2].auctionStatus = false; // payload[2] is a card
         }
     },
     actions: {
@@ -234,7 +269,7 @@ const dataStore = new Vuex.Store({
                 }
             });
         },
-        createNewProduct(state, payload, context) {
+        createNewProduct({ state, commit} , payload) {
             console.log(payload);
             let _productId = payload.productId;
             let _sellerId = payload.sellerId;
@@ -245,11 +280,11 @@ const dataStore = new Vuex.Store({
             let _productAmount = payload.productAmount;
             let _price = Util.numberToWei(payload.price);
 
-            let promise = window.CSF.createNewProduct(_productId, _sellerId,_productName,_description,
-                _weblink,_productCategory,_productAmount,_price);
+            let promise = window.CSF.createNewProduct(_productId, _sellerId,_productName,_description,_weblink,_productCategory,_productAmount,_price);
+            
             promise.then((output) => {
                 console.log(output);
-                context.commit('getProductList');
+                commit('getProductList');
             });
         },
         createAutionProduct(state, payload) {
@@ -268,6 +303,48 @@ const dataStore = new Vuex.Store({
                 console.log(output);
             });
         },
+        getBuyHistory(state, payload) {
+            let address = payload;
+            let product = new Product(address);
+            product.getBuyHistory().then(output => {
+                console.log(output);
+                dataStore.commit('updateBuyHistoryForAProduct', output)
+            });
+        },
+        getBidHistory(state, payload) {
+            let address = payload;
+            let product = new AuctionProduct(address);
+            product.getBidHistory().then(output => {
+                console.log(output);
+                dataStore.commit('updateBidHistoryForAProduct', output);
+            });
+        },
+        finishSale(state, card){
+            let address = card.address;
+            let product = new Product(address);
+            product.finishSale().then(output => {
+                console.log(output);
+                let signer = output.signer;
+                let txId = output.txid; 
+                dataStore.commit('updateFinishSale', [signer, txId, card]);
+            });
+        },
+        finishAuctionSale(state, sendData) {
+            console.log(sendData)
+            let address = sendData[0].address;
+            let auctionWinnerAddresses = sendData[1];
+            let winers = auctionWinnerAddresses.split(",");    
+            let product = new AuctionProduct(address);
+            
+            product.finishAuction(winers).then(output => {
+                console.log(output);
+                let signer = output.signer;
+                let txId = output.txid;
+                console.log([signer, txId])
+                dataStore.commit('updateFinishAuction', [signer, txId, card])
+            });
+        }
+
     },
     getters: {
         getCardById: state => id => {
@@ -275,6 +352,18 @@ const dataStore = new Vuex.Store({
         },
         getCards(state) {
             return state.cards;
+        },
+        getBuyHistoryForAProduct(state) {
+            return state.buyHistoryForAProduct;
+        },
+        getBidHistoryForAProduct(state) {
+            return state.bidHistoryForAProduct;
+        },
+        getFinishSaleData(state) {
+            return state.finishSaleData;
+        },
+        getFinishAuctionData(state) {
+            return state.finishAuctionData;
         }
     }
 });

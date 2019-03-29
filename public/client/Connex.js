@@ -26,8 +26,6 @@ Connex.prototype.invoke = function (methodName, args) {
 }
 
 Connex.prototype.signInvoke = function (methodName, args) {
-    // console.log("in connex.js=", args)
-
     let method = this.getMethod(methodName)
     if(!method) throw new Error("method does not exist");
     const clause = args?method.asClause.apply(method, Array.from(args)): method.asClause();

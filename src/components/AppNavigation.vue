@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import dataStore from "../store/dataStore";
 export default {
     name: 'AppNavigation',
     data() {

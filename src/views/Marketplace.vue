@@ -108,10 +108,10 @@
                     <v-list-tile-content>Minimum Bid:</v-list-tile-content>
                     <v-list-tile-content class="align-end">VET{{card.minPrice}}</v-list-tile-content>
                   </v-list-tile>
-                  <v-list-tile v-if="card.auction==true">
+                  <!-- <v-list-tile v-if="card.auction==true">
                     <v-list-tile-content>Suggested Price:</v-list-tile-content>
                     <v-list-tile-content class="align-end">VET{{card.suggestedPrice}}</v-list-tile-content>
-                  </v-list-tile>
+                  </v-list-tile> -->
                   <v-list-tile v-if="card.auction==false">
                     <v-list-tile-content>Price:</v-list-tile-content>
                     <v-list-tile-content class="align-end">VET{{card.price}}</v-list-tile-content>
@@ -165,10 +165,10 @@
                     <v-list-tile-content>Minimum Bid:</v-list-tile-content>
                     <v-list-tile-content class="align-end">VET{{card.minPrice}}</v-list-tile-content>
                   </v-list-tile>
-                  <v-list-tile v-if="card.auction==true">
+                  <!-- <v-list-tile v-if="card.auction==true">
                     <v-list-tile-content>Suggested Price:</v-list-tile-content>
                     <v-list-tile-content class="align-end">VET{{card.suggestedPrice}}</v-list-tile-content>
-                  </v-list-tile>
+                  </v-list-tile> -->
                   <v-list-tile v-if="card.auction==false">
                     <v-list-tile-content>Price:</v-list-tile-content>
                     <v-list-tile-content class="align-end">VET{{card.price}}</v-list-tile-content>
@@ -268,6 +268,14 @@ export default {
             this.$router.push('/sign-in');
           } else {
             dataStore.commit('updateId', id);
+            let card = dataStore.getters.getCardById(dataStore.state.id);
+            let address = card.address;
+            if (card.auction == false) {
+              dataStore.dispatch('getBuyHistory', address)
+            };
+            if (card.auction ==true) {
+              dataStore.dispatch('getBidHistory', address)
+            }
             this.$router.push('/view');
           }
         },
@@ -301,7 +309,7 @@ export default {
           }
           let a = [icon, color];
           return a;
-        }
+        },
     },
     // beforeMount() {
     // }
