@@ -114,7 +114,7 @@ contract AuctionProduct is BaseProduct {
         numberOfBids++;
     }
 
-    function finishAuction(address[] _winers) public onlyOwner returns (bool) {
+    function finishAuction(address[] _winers) public onlyAdmin returns (bool) {
         require(_winers.length == numberOfWinner, "Invalid winer addresses");
 
         auctionStatus = false;
@@ -131,6 +131,9 @@ contract AuctionProduct is BaseProduct {
                 request.biderWallet.transfer(request.value);
             }
         }
+
+        (,,address wallet,) = csf.getSellerInfo(owner);
+        wallet.transfer(address(this).balance);
 
         return true;
     }
