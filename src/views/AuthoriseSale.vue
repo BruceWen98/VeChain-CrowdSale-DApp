@@ -34,10 +34,16 @@
                     <v-spacer></v-spacer>
                     <v-btn color="primary" :disabled="!valid" @click="submit">Submit Sale Authorisation Request</v-btn>
                 </v-toolbar>
-                <v-toolbar>
-                    <v-spacer></v-spacer>
-                    <div>Once you have been approved, an email will be sent to you.</div>
-                </v-toolbar>
+                <v-card>
+                    <v-card-text>NOTE: This app is currently in initial stages, to request authorise seller, besides 
+                        filling in the form above and clicking on authorise sale, please also go to the link below 
+                        and fill up the form to submit your wallet address. We will approve your request to be an 
+                        authorised seller within 1 business day. Once your address has been approved you will be able
+                        to create new sale.
+<a href="https://docs.google.com/forms/d/e/1FAIpQLScFaq_JXWSkntxS5dwxfZBToZ9uK16VM3q1mQ0jmfaET65neQ/viewform?fbzx=-3145106771057433489">Go to Form</a>
+                    </v-card-text>
+                    
+                </v-card>
             </v-flex>
         </v-layout>
     </v-container>
