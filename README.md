@@ -1,12 +1,11 @@
-<<<<<<< HEAD
-# **“CrowdSale” DApp**
+# **VeChain “CrowdSale” DApp**
 
 ## About CrowdSale:
 CrowdSale is a decentralized marketplace for users to make online purchases of non-physical products. Being decentralized, CrowdSale records all transaction history on the **VeChain** blockchain network. Cryptocurrency is used for transfer of funds, without the hassle of credit cards.
 
 In a recent paper by MIT technology review, (https://www.technologyreview.com/s/613135/blockchain-powered-marketplaces-will-be-like-steroids-for-crowd-investing/?fbclid=IwAR2AVwY0c9M1o9gQuvYzlK_VB8fBGm1QATh8YBmMhe81d0vW1dEsCeEat0w) the strong potential of marketplaces and crowd concepts with blockchain applications were highlighted.
 
-CrowdSale’s vision is to be the go-to marketplace for online assets. We plan to onboard products from many categories, including media, software keys, e-books, news, freelance services, and many more.
+CrowdSale’s vision is to be the go-to marketplace for online assets sales. We plan to onboard products from many categories, including media, software keys, e-books, news, freelance services, and many more.
 
 **Features of CrowdSale:**
 CrowdSale is a beautifully designed marketplace that provides the option to sell and also to auction products. On CrowdSale, users can easily view all buy and bid history for each product recorded securely on blockchain and make trusted decisions.
@@ -20,11 +19,11 @@ You can see a Seller’s history easily with the assurance that it has not been 
 The auction seller puts up "x" number of his/her product for sale. Bidders bid for the particular product, and each bid is recorded on the blockchain. Take note that when submitting a bid, the bidder will need to pay the respective number of tokens. When the number of bids equals or exceeds the total number of products available, the seller has the option to finish the Auction. Upon the seller's finish auction confirmation, CrowdSale will send the blockchain tokens of the successful bidders over to the seller, and return the blockchain tokens of the failed bidders back to them.
 
 
-# How CrowdSale Can Improve and Endorse the VeChain Ecosystem:
+# How CrowdSale Can Endorse the VeChain Ecosystem:
 
 CrowdSale is a clear endorsement of the VeChain ecosystem in developing non-trivial decentralized applications. CrowdSale DApp has selected VeChain blockchain because of the many unique features the blockchain offers that is central to its required features. 
 
-CrowdSale is a traiblazer for VeChain in that it has adopted **Connex** as the middle layer, rather than the common web3.js front-end standard.
+CrowdSale is a traiblazer for VeChain in that it has adopted **Connex** as the middle layer, rather than the common web3.js front-end standard. This would allow CrowdSale to be able to use VeChain's unique features.
 
 The Front-End of CrowdSale is developed using *Vue.js* framework, the rising star of front-end frameworks. The highly dynamic Vuex store is used, allowing for asynchronous viewing of products upon making new sale and other data. While most implementation you find online regarding DApps are done with React.js, CrowdSale validates the compatibility of Vue.js framework with VeChain backend smart contracts. This will highly draw the ever-increasing pool of Vue.js frontend developers' interest in the Vechain environment and larger blockchain ecosystem.
 
@@ -46,9 +45,9 @@ The app consists of a Web App, APIs and Smart contracts. The Web App is implemen
 
 The Web App and APIs will be hosted on a trusted platform or a hosting platform, such as Morpheuslabs BPaaS, GoDaddy, and the smart contracts will be running on VeChain MainNet.
 
-All Amount, price and bids referred in this App is based on the blockchain native token. (VET in this case)
+All amount, price and bids referred in this App is based on the blockchain native token. (VET in this case)
 
-### Core Technology Implementations
+### Core Technology Stacks
 
 #### Vue.JS frontend
 * Vue, Vuex, Vue Router
@@ -58,14 +57,29 @@ All Amount, price and bids referred in this App is based on the blockchain nativ
 #### Middle Client API
 * Connex 
 
-#### Backend Smart Contracts
+#### Backend Smart Contracts and Blockchain Technology
 * Solidity
 * Truffle Framework v4.1.15
-* Deployment on VeChain Blockchain
-* Sync wallet for testing
+* VeChain web3-gear
+* VeChain Thor
+* VeChain Sync Browser
 
 ### Technical Features of CrowdSale
-(Sang)
+CrowdSale smart contracts are written in Solidity and deployed on VeChain as backend infarstructure. And front applications can use Connex Client to interact with the smart contracts.
+
+CrowdSale dApp supports two kinds of sales for now: normal sale and auction sale. In near future, more functions will be added.
+
+The followings are the main functions provide by the CrowdSale smart contracts (refer to ABI for detailed spec of smart contract functions).
+* registerSeller: register a seller to be able to sell products on dApp
+* getSellers: return list of sellers
+* getAllProductList: get a list of all products
+* getProductListOfSeller: get list of products of one seller
+* createNewProduct: create a new product for sale (it requires seller permission)
+* getBuyRequests: get all the buying requests of a product
+* finishSale: finish sale of a product, then users are not able to buy the project any more, and tokens are released to the seller.
+* createAuctionProduct: create an auction product
+* getListBiders: get the list of all bidders
+* finishAuction: settle auction sale, tokens will be refunded to people who did not win the auction.
 
 
 # UI/UX Features and Walkthrough
@@ -83,7 +97,7 @@ CrowdSale web application UI is configured to work well in mobile, tablet and co
 ![](https://i.imgur.com/DiX3VKK.png)
 
 ## Join and Login
-Users should begin exploring CrowdSale by joining with a simple set-up. 
+Users should begin exploring CrowdSale by joining with a simple sign-up. 
 ![](https://i.imgur.com/BIPJAJg.png)
 
 
@@ -188,17 +202,17 @@ Linux or Mac OS is recommened for the development setup.
 ### Prepare development environment
 Install the following enablement technology
 * Node.js
-* Vue-cli (`npm install -g @vue/cli`)a
+* Vue-cli (`npm install -g @vue/cli`)
 * python3 and pip3
 * Golang
 * Truffle v4.1.15 (not v5+ which is in beta)
 * Web3-gear
-* VeChain thor (https://github.com/vechain/thor#installation)
+* VeChain Thor (https://github.com/vechain/thor#installation)
 * VeChain Sync Browser
 
-### Running Blockchain Locally
+### Running Blockchain Node Locally
 Run each of the following in a separate shell window.
-1. Run thor in solo
+1. Run thor solo node
     `bin/thor solo --on-demand`
 2. Run web3-gear
  `web3-gear`
@@ -213,26 +227,25 @@ cd src
 npm run serve
 ```
 
-## Deploying CrowdSale dApp on VeChain MainNet
-(Sang)
+## Deploying CrowdSale dApp on VeChain Testnet and Mainnet
 
+The smart contracts have been deployed to the VeChain Testnet and Mainnet. Please refer to the information below for the address and ABIT of the smart contract on Testnet and Mainnet respectively.
+
+### Testnet deployoment information
+``` json
+    Contract address: 0x740aDeDf4f42Da12d4C177f329D11995bb24000E
+    ABI: [{"constant":true,"inputs":[],"name":"getSellers","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"pageNumber","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_person","type":"address"},{"indexed":false,"name":"_isAdd","type":"bool"}],"name":"RoleAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"}],"name":"OwnershipRenounced","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"constant":false,"inputs":[{"name":"newPage","type":"uint256"}],"name":"changePageRecords","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_sellerName","type":"string"},{"name":"_sellerId","type":"string"},{"name":"_wallet","type":"address"},{"name":"_seller","type":"address"}],"name":"registerSeller","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_sellerAddress","type":"address"}],"name":"getSellerInfo","outputs":[{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"address"},{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"_seller","type":"address"}],"name":"updateSellerInfo","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_seller","type":"address"}],"name":"disableSeller","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_productId","type":"string"},{"name":"_sellerId","type":"string"},{"name":"_productName","type":"string"},{"name":"_description","type":"string"},{"name":"_weblink","type":"string"},{"name":"_productCategory","type":"string"},{"name":"_productAmount","type":"uint256"},{"name":"_price","type":"uint256"}],"name":"createNewProduct","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_productId","type":"string"},{"name":"_sellerId","type":"string"},{"name":"_productName","type":"string"},{"name":"_description","type":"string"},{"name":"_weblink","type":"string"},{"name":"_productCategory","type":"string"},{"name":"_productAmount","type":"uint256"},{"name":"_minPrice","type":"uint256"}],"name":"createAuctionProduct","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_page","type":"uint256"}],"name":"getAllProductList","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_page","type":"uint256"}],"name":"getProductListOfSeller","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"}]
+```
+### Mainet deployoment information
+```jsonld=
+Contract Address: 0x00c307a02f68c1A5dd9232C1150983F482a5d173
+ABI: [{"constant":true,"inputs":[],"name":"getSellers","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"pageNumber","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_person","type":"address"},{"indexed":false,"name":"_isAdd","type":"bool"}],"name":"RoleAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"}],"name":"OwnershipRenounced","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"constant":false,"inputs":[{"name":"newPage","type":"uint256"}],"name":"changePageRecords","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_sellerName","type":"string"},{"name":"_sellerId","type":"string"},{"name":"_wallet","type":"address"},{"name":"_seller","type":"address"}],"name":"registerSeller","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_sellerAddress","type":"address"}],"name":"getSellerInfo","outputs":[{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"address"},{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"_seller","type":"address"}],"name":"updateSellerInfo","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_seller","type":"address"}],"name":"disableSeller","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_productId","type":"string"},{"name":"_sellerId","type":"string"},{"name":"_productName","type":"string"},{"name":"_description","type":"string"},{"name":"_weblink","type":"string"},{"name":"_productCategory","type":"string"},{"name":"_productAmount","type":"uint256"},{"name":"_price","type":"uint256"}],"name":"createNewProduct","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_productId","type":"string"},{"name":"_sellerId","type":"string"},{"name":"_productName","type":"string"},{"name":"_description","type":"string"},{"name":"_weblink","type":"string"},{"name":"_productCategory","type":"string"},{"name":"_productAmount","type":"uint256"},{"name":"_minPrice","type":"uint256"}],"name":"createAuctionProduct","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_page","type":"uint256"}],"name":"getAllProductList","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_page","type":"uint256"}],"name":"getProductListOfSeller","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"}]
+
+```
+
+## Onboarding CrowdSale dApp on Morpheus Labs Application Library
+
+This dApp aims to provide a reference implementation of VeChain dApp that would help promote VeChain adoption. Morpheus Labs Blockchain Platform as a Service (ML BPaaS) recognizes VeChain as a primary public blockchain business solution and now the end to end development and test environments are available on ML BPaaS. So the application will be published into the Application Library on ML BPaaS in near future. Then developers can use the application as a reference and leverage the platform to quickly build and test VeChain dApps.
 
 # Future Add-Ons:
-The features below will be added in the near future:
-=======
-# Deploy Process
-Deploying Backend on local test node:
-1. run thor solo mode with command `bin/thor solo --on-demand`
-2. run web3-gear `web3-gear`
-3. deploy smart contract on VeChain `truffle migrate` within <vechain-backend> folder
-4. get CrowdSaleFactory contract address and change <const address> in the CrowdSaleFactory.js file (public>client>CrowdSaleFactory.js)
-
-Deploying Frontend on local test node:
-1. Go into <src> folder and run command `npm run serve` 
-
-
-# TODO
-- Why new product is not updated in view, must refresh?
-- getproductlist return output is not truly async, to resolve the problem we setTimeout() to bypass
->>>>>>> 558322cacd7a73f7a00c81f841b5054dbfcf36b0
-
+This version of the dApp is just the starting point, more functional features for crowd sale and technical features leveraging VeChain unique features will be added in the future add-ons. Stay with us for future dApp developments using VeChain.
