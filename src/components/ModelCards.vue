@@ -8,7 +8,7 @@
             <v-flex xs12 sm12 md12>
                 <v-card>
                     <v-responsive>
-                        <v-img src="https://wmaproperty.com/blog/wp-content/uploads/2016/09/Understand-How-The-Auctions-Come-About.png" height="700px">
+                        <v-img src="/img/Understand-How-The-Auctions-Come-About.png" height="700px">
                             <v-container fill-height fluid>
                                 <v-layout fill-height>
                                     <v-flex xs12 align-end flexbox>
@@ -40,7 +40,7 @@
             <v-flex xs12 sm6 md6>
                 <v-card>
                     <v-responsive>
-                        <v-img src="https://images.touchcr.com/TouchCR+Redesign/ScreenShots+for+Posts/Commerce+-+transaction+fees.png" height="500px">
+                        <v-img src="/img/Commerce+-+transaction+fees.png" height="500px">
                             <v-container fill-height fluid>
                                 <v-layout fill-height>
                                     <v-flex xs12 align-end flexbox>
@@ -71,7 +71,7 @@
             <v-flex xs12 sm6 md6>
                 <v-card>
                     <v-responsive>
-                        <v-img src="https://cdn.dribbble.com/users/144388/screenshots/4554029/coindust--dribbble.gif" height="500px">
+                        <v-img src="/img/coindust--dribbble.gif" height="500px">
                             <v-container fill-height fluid>
                                 <v-layout fill-height>
                                     <v-flex xs12 align-end flexbox>

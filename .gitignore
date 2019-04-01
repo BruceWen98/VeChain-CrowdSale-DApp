@@ -19,4 +19,5 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
-firebase/index.js
+# firebase/index.js
+.firebase/*

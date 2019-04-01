@@ -7,7 +7,7 @@
             <v-flex xs12 sm12 md4>
                 <v-card>
                     <v-responsive>
-                        <v-img src="https://cdn-images-1.medium.com/max/1600/1*yS-CZkLE9YkfqX66AT9QsA.gif" height="500px">
+                        <v-img src="/img/decentralized.gif" height="500px">
                             <v-container fill-height fluid>
                                 <v-layout fill-height>
                                     <v-flex xs12 align-end flexbox>
@@ -34,7 +34,7 @@
             <v-flex xs12 sm12 md4>
                 <v-card>
                     <v-responsive>
-                        <v-img src="https://cdn.dribbble.com/users/406059/screenshots/3017368/salesforce_dribbble.gif" height="500px">
+                        <v-img src="/img/salesforce_dribbble.gif" height="500px">
                             <v-container fill-height fluid>
                                 <v-layout fill-height>
                                     <v-flex xs12 align-end flexbox>
@@ -57,7 +57,7 @@
             <v-flex xs12 sm12 md4>
                 <v-card>
                     <v-responsive>
-                        <v-img src="https://gifimage.net/wp-content/uploads/2017/09/animated-gif-software-5.gif" height="500px">
+                        <v-img src="/img/animated-gif-software-5.gif" height="500px">
                             <v-container fill-height fluid>
                                 <v-layout fill-height>
                                     <v-flex xs12 align-end flexbox>
